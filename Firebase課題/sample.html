@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Director of X</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="zentai">
+<!-- コンテンツ表示画面 -->
+
+<div>
+  <div class="title">
+    <h1 class="odai">Director of X</h1>
+    <h4 class="setumei">Director of Xとは... <br>
+      スポーツの試合や練習動画を共有するとトップレベルのプレーヤーや監督が<br>
+      試合や練習に対するコメントやアドバイスをしてくれるサービス</h4>
+      <img src="sports.jpg" alt="" class="image">
+    <p> time:コメントする場面の時間帯を記載</p>
+    <p>coment:GODD/BADPOINTや改善点を記載</p>
+    <p>※返信する場合は、comentのみ記載</p>
+  </div>
+
+    <div class="time">time:<input type="text" id="uname"> </div>
+    <div class="coment">coment:
+        <textarea id="text" cols="30" rows="10"></textarea>
+        <button id="send">送信</button>
+    </div>
+    <div id="output" style="overflow: auto; height: 500px;"></div>
+</div>
+<!--/ コンテンツ表示画面 -->
+
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- JQuery -->
+
+
+<!--** 以下Firebase **-->
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+    import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
+    from "https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js";
+    
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+  apiKey: "************",
+  authDomain: "************",
+  projectId: "************",
+  storageBucket: "************",
+  messagingSenderId: "************",
+  appId: "************"
+};
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db  = getDatabase(app);
+    const dbRef = ref(db,"chat");
+
+    $("#send").on("click",function(){
+        const msg = {
+          uname : $("#uname").val(),
+          text : $("#text").val()
+        }
+        const newPostRef = push(dbRef); //ユニークキーを生成
+        set(newPostRef,msg);
+     
+    });
+
+    onChildAdded(dbRef,function(data){
+      const msg = data.val();
+      const key = data.key;
+      let h = `
+      <h1 class=total>
+        <p>${msg.uname}</p>
+        <p>${msg.text}</p>
+      </h1>
+      `
+     
+          $("#output").append(h);
+    });
+  </script>
+
+</body>
+<footer class="vision">
+  〜トップレベルの思考をテクノロジーの力でより身近に〜
+</footer>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
